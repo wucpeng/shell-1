@@ -1,0 +1,42 @@
+
+rs.slaveOk()
+rs.secondaryOk()
+rs.stepDown()
+rs.initiate(config)；
+
+cfg=rs.config()
+cfg.protocolVersion=1
+rs.reconfig(cfg)
+rs.reconfig(cfg, {force: true})
+
+db.version()
+db.adminCommand( { getParameter: 1, featureCompatibilityVersion: 1 } )
+db.adminCommand( { setFeatureCompatibilityVersion: "3.6" } )
+db.shutdownServer()
+db.adminCommand({authSchemaUpgrade: 1})
+
+db.serverStatus() ，
+db.stats()
+db.collection.stats()
+
+db.fsyncLock()锁定全部磁盘不可写
+db.fsyncUnlock()锁定全部磁盘解锁锁
+db.getUsers() 
+db.dropAllUsers() //从当前数据库删除所有用户 下面代码删除全库用户
+db.adminCommand( "shutdown" ) 从所有的从节点开始关闭 并作升级
+
+
+db.createUser({user:"admin",pwd:"admin",roles:[{role:"root",db:"admin"}]});
+authenticationRestrictions，就是用来解决IP白名单的缺陷
+db.createUser(
+   {
+     user: "miracle",
+     pwd: "young",
+     roles: [ {role: 'readWrite', db: 'young'} ],
+     authenticationRestrictions: [ {
+        clientSource: ["192.168.31.246"],
+        serverAddress: ["192.168.31.246"]
+     } ]
+   }
+)
+
